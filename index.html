@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start-IT-Präsi</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .left, .right {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            background-color: rgb(190, 190, 190);
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+            
+            /* Text wirklich exakt in die Mitte */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left {
+            border-right: 2px solid rgb(0, 0, 0);
+        }
+
+        .left::before, .right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease;
+            z-index: 1;
+        }
+
+        /* Weniger starker Slide-Effekt (leichtes Grau statt Weiß) */
+        .left::before {
+            right: 0;
+            background-color: #d0d0d0;
+        }
+
+        .right::before {
+            left: 0;
+            background-color: #d0d0d0;
+        }
+
+        .left:hover::before,
+        .right:hover::before {
+            width: 100%;
+        }
+
+        /* Balken verschwindet wieder */
+        .left:not(:hover)::before,
+        .right:not(:hover)::before {
+            width: 0;
+        }
+
+        .text {
+            font-size: 48px;
+            color: rgb(0, 0, 0);
+            z-index: 2;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="left" onclick="window.location.href='index IOS.html';">
+        <div class="text">IOS</div>
+    </div>
+
+    <div class="right" onclick="window.location.href='index Android.html';">
+        <div class="text">Android</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+    min-height: 100%;
+    background-color: rgb(34, 34, 34);
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto; /* explizit scrollbar erlauben */
+}
+
+/* Container für den gesamten Seiteninhalt außer dem Footer */
+#content {
+    flex: 1; /* Nimmt den verfügbaren Platz ein */
+}
+
+/* Header */
+header {
+    width: 100%;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px) brightness(1.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: top 0.5s;
+    z-index: 10;
+}
+
+/* Sektionen */
+.section1, .section3 {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh; /* Maximale Höhe für den Abschnitt */
+    position: relative;
+}
+
+.section1 {
+    top: -12vh;
+    background-color: black;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+
+.section1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 100%;
+    height: 80vh;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 2;
+    pointer-events: none;
+}
+@media (max-width: 768px) {
+    .section1::after {
+        bottom: 0; /* kein negativer Versatz */
+    }
+}
+
+@media (max-width: 480px) {
+    .section1::after {
+        bottom: 0;
+    }
+}
+
+
+
+
+.Para-text {
+    position: sticky;
+    top: 40%; /* direkt unter dem Header */
+    color: white;
+    font-size: clamp(2rem, 10vw, 5em);
+    text-align: center;
+    z-index: 1;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+
+}
+
+
+/* Sektion 3 */
+.section3 {
+    background-color: rgb(34, 34, 34);
+    text-align: center;
+    color: white;
+    height: auto;
+    top: 0;
+}
+
+
+
+/* Bilder und Text Blöcke */
+.content-block img {
+    max-width: 100%;
+    width: 300px;
+    height: auto;
+    min-width: 100px;
+    min-height: auto;
+    object-fit: cover;
+    margin: 0 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.content-block img:hover {
+    transform: scale(1.05);
+}
+
+/* Flexbox Layout für die Abwechslung */
+.content-block {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    justify-content: space-between; /* Stelle sicher, dass der Inhalt gut verteilt ist */
+    border-bottom: 2px solid #fff; /* Weiße Linie unter jedem Content Block */
+    padding-bottom: 20px; /* Abstand unterhalb des Inhalts */
+}
+
+/* Anpassung für den Textbereich */
+.content-block p {
+    max-width: 500px;
+    margin-bottom: 20px; /* Abstand nach unten */
+    /* Entferne die border-bottom hier, um doppelte Linien zu vermeiden */
+}
+
+/* Sicherstellen, dass der Inhalt in mobilen Ansichten gut aussieht */
+@media (max-width: 768px) {
+    .content-block p {
+        max-width: 100%; /* Textbereich soll auch auf kleinen Bildschirmen den gesamten Platz einnehmen */
+    }
+
+    .content-block img {
+        margin-bottom: 20px; /* Abstand zwischen Bild und Text */
+    }
+
+    /* Sicherstellen, dass das Bild immer oben bleibt */
+    .content-block:nth-child(even) {
+        flex-direction: column; /* Bilder immer oben, egal ob gerade oder ungerade Sektion */
+    }
+}
+
+
+
+/* Abwechselnde Anordnung (für große Bildschirme) */
+.content-block:nth-child(even) {
+    flex-direction: row-reverse; /* Bilder auf der rechten Seite, wenn es eine gerade Sektion ist */
+}
+
+/* Media Query für kleinere Bildschirme */
+@media (max-width: 768px) {
+    .content-block {
+        flex-direction: column; /* Bilder und Text übereinander auf kleineren Bildschirmen */
+        align-items: center; /* Zentriert den Inhalt */
+    }
+
+    .content-block img {
+        margin-bottom: 20px; /* Abstand zwischen Bild und Text */
+    }
+
+    .content-block p {
+        max-width: 100%; /* Textbereich soll auch auf kleinen Bildschirmen den gesamten Platz einnehmen */
+    }
+
+    /* Sicherstellen, dass das Bild immer oben bleibt */
+    .content-block:nth-child(even) {
+        flex-direction: column; /* Bilder immer oben, egal ob gerade oder ungerade Sektion */
+    }
+
+    .download-link {
+        display: block !important; /* Sicherstellen, dass der Button sichtbar bleibt */
+        bottom: 30px; /* Stelle sicher, dass er nicht mit anderen Elementen kollidiert */
+    }
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh; /* Sicherstellen, dass das Modal immer den gesamten Bildschirm ausfüllt */
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: auto; /* Falls der Inhalt länger ist, kann der Nutzer scrollen */
+}
+
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    transform: translateY(20px); /* Bild nach unten verschieben */
+    transition: transform 0.3s ease; /* Sanfte Animation für den Effekt */
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: rgb(172, 172, 172);
+    box-shadow: 2;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+footer {
+    width: 100%;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    color: black;
+    position: relative; /* Footer bleibt am Ende des Inhalts */
+    margin-top: auto; /* Stellt sicher, dass der Footer immer am Ende bleibt */
+}
+
+/* Der Toggle-Button (Hamburger Menü), jetzt rechts */
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    transition: color 0.3s ease;
+    position: absolute;
+    right: 50px; /* Etwas näher am Rand */
+    top: 10px;  /* Position etwas nach unten verschieben */
+}
+
+.toggle-btn:hover {
+    color: #dddddd;
+}
+
+/* Design für das Seitenpanel */
+.side-panel {
+    width: 80vw; /* Statt fester 250px – nimmt 80% der Bildschirmbreite */
+    max-width: 300px; /* Maximalbreite nicht überschreiten */
+    display: flex;
+    flex-direction: column; /* Vertikale Anordnung der Elemente */
+    position: fixed;
+    top: 60px; /* Platz für den Header */
+    right: -300px; /* Startposition außerhalb des Bildschirms */
+    height: 5vh; /* Panel nimmt die gesamte Höhe des Bildschirms ein */
+    background-color: rgba(34, 34, 34, 0.9);
+    color: white;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
+    align-items: center; /* Zentriert die Elemente horizontal im Panel */
+    justify-content: flex-start; /* Vertikale Ausrichtung des Inhalts */
+    line-height: 1.2vh;
+}
+
+/* Styling für die einzelnen Menüpunkte */
+.side-panel .menu-item {
+    background-color: transparent;
+    color: white;
+    width: 100%; /* Button oder Link nimmt die gesamte Breite ein */
+    height: 80px; /* Höhe der einzelnen Menüpunkte */
+    border: none;
+    font-size: 18px; /* Schriftgröße der Menüpunkte */
+    text-align: left; /* Text linksbündig */
+    padding-left: 20px; /* Abstand vom linken Rand */
+    margin: 10px 0; /* Abstand zwischen den Menüpunkten */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Sanfte Übergänge */
+}
+
+.side-panel .menu-item:hover {
+    color: #dddddd;
+}
+
+/* Öffnen des Panels (wird mit JavaScript gesteuert) */
+.side-panel.open {
+    right: 0; /* Wenn das Panel geöffnet ist, rückt es nach links */
+}
+
+/* Optional: Design für das Seitenpanel */
+.side-panel h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center; /* Text des Headers zentrieren */
+    color: #ffffff; /* Header-Farbe */
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .side-panel .menu-item {
+        font-size: 16px;
+        height: 50px;
+        padding-left: 15px;
+    }
+
+    .toggle-btn {
+        font-size: 26px;
+    }
+
+    .side-panel h2 {
+        font-size: 20px;
+    }
+}

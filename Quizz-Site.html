@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz-IT-Präsi</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(34, 34, 34);
+            color: white;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #444;
+            border: 1px solid #666;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #quiz-wrapper {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        #progress {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #444;
+            border: 1px solid #666;
+            color: white;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .correct {
+            color: rgb(0, 255, 0);
+        }
+
+        .wrong {
+            color: rgb(255, 80, 80);
+        }
+
+        .answer-option {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="back-btn" onclick="location.href='start.html'">← Zurück</button>
+
+    <div id="quiz-wrapper">
+        <div id="progress"></div>
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Welches Kabel benutzt man normalerweise, um sein Handy mit dem PC oder Laptop zu verbinden",
+                answers: ["USB-A auf USB-C", "USB-C auf USB-B"],
+                correct: 0
+            },
+            {
+                question: "Welche Methode der Fotoübertragung haben wir Ihnen gezeigt",
+                answers: ["App", "Bluetooth"],
+                correct: 1
+            },
+            {
+                question: "Was ist der Internal Storage?",
+                answers: ["Hauptspeicher", "Arbeitsspeicher", "Schnellzugriffsspeicher"],
+                correct: 0
+            },
+            {
+                question: "Wie heißt das Gerät, mit dem man seinen USB-Stick an den USB-Anschluss seines Handys anschließen kann?",
+                answers: ["USB-D-Adapter", "USB-A-Adapter", "USB-OTG-Adapter"],
+                correct: 2
+            },
+            {
+                question: "Was muss man in der Dateien-App auf einem iOS-Gerät auswählen, wenn sie ein Bild in der Galerie speichern möchten",
+                answers: ["Teilen → Bild sichern", "Teilen → Kopieren"],
+                correct: 0
+            }
+        ];
+
+        let current = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const q = questions[current];
+            document.getElementById("progress").innerText =
+                `Frage ${current + 1} von ${questions.length}`;
+
+            let html = `
+                <div class="question">${q.question}</div>
+                ${q.answers
+                    .map((ans, idx) => 
+                        `<div class="answer-option">
+                            <input type="radio" name="answer" value="${idx}"> ${ans}
+                        </div>`
+                    ).join("")}
+                <button id="check-btn" onclick="checkAnswer()">Antwort prüfen</button>
+            `;
+
+            document.getElementById("quiz-container").innerHTML = html;
+        }
+
+        function checkAnswer() {
+            const selected = document.querySelector("input[name='answer']:checked");
+            if (!selected) {
+                alert("Bitte eine Antwort auswählen!");
+                return;
+            }
+
+            const selectedIndex = parseInt(selected.value);
+            const correctIndex = questions[current].correct;
+
+            // Antwort prüfen Button entfernen
+            document.getElementById("check-btn").remove();
+
+            let feedback = "";
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedback = `<div class="feedback correct">✓ Richtig!</div>`;
+            } else {
+                feedback = `
+                    <div class="feedback wrong">
+                        ✗ Falsch! Richtige Antwort: <b>${questions[current].answers[correctIndex]}</b>
+                    </div>`;
+            }
+
+            document.getElementById("quiz-container").innerHTML += feedback;
+
+            // Weiter-Button
+            document.getElementById("quiz-container").innerHTML += `
+                <button onclick="nextQuestion()">Nächste Frage</button>
+            `;
+        }
+
+        function nextQuestion() {
+            current++;
+
+            if (current < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById("progress").innerText = "Fertig!";
+            document.getElementById("quiz-container").innerHTML = `
+                <h2>Dein Ergebnis:</h2>
+                <p>${score} von ${questions.length} korrekt!</p>
+                <button onclick="restart()">Nochmal spielen</button>
+            `;
+        }
+
+        function restart() {
+            current = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        loadQuestion();
+    </script>
+
+</body>
+</html>
