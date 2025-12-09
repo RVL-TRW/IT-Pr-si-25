@@ -1,7 +1,7 @@
 {
   //"$schema": "./node_modules/wrangler/config-schema.json",
   "name": "meine-webseite",
-  "main": "src/index.js",           // Pfad zu deinem Einstiegspunkt
+  "main": "index.js",           // Pfad zu deinem Einstiegspunkt
   "compatibility_date": "2025-12-09",
   "workers_dev": true               // true = Deploy auf workers.dev Subdomain
 }
