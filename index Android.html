@@ -1,157 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Android-IT-Präsi</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
-</head>
-<body>
+// Bilder vergrößern und Modal öffnen
+function openModal(image) {
+    const modal = document.getElementById("myModal");
+    const modalImg = document.getElementById("modalImage");
+    const downloadButton = document.getElementById("downloadButton");
+    const closeButton = document.querySelector(".close");
 
-  <header class="header">
-        <button class="toggle-btn">☰</button>
-        <div class="side-panel">
-            <a href="Handout-IT-Tapio.png" download="Handout-IT-Tapio.png" class="menu-item" id="menuDownload">Handout</a>
-            <a href="Quizz-Site.html" class="menu-item">Quizz</a>
-        </div>
-    </header>
-    
-    
-<div style="padding-top: 80px;">
-    <div class="section1">
-        <div class="Para-text"> <b>Laptop mit Android</b> </div>
-    </div>
-</div>
+    // Modal anzeigen
+    modal.style.display = "block";
+    modalImg.src = image.src;
 
-<div class="section3">
-    <div class="content-block">
-        <img src="USB-Anschlüsse.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>- USB-Anschlüsse.<br> <br> (Quelle:https://cup-digital-muenchen.de/cupwissen/bist-du-auch-von-diesen-vielen-unterschiedlichen-usb-anschluss-typen-genervt)</p>
-    </div>
+    // Sicherstellen, dass der Close-Button sichtbar ist
+    closeButton.style.display = 'block';
 
-    <div class="content-block">
-        <img src="IMG_20251209_201803.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>- USB-OTG-Adapter.<br> - Zum Verbinden eines USB-Sticks mit dem Handy
-        </p>
-    </div>
+    // Download-Button Event-Listener setzen (nur einmalig, aber hier für jedes Modal-Öffnen resetten)
+    downloadButton.onclick = function() {
+        downloadImage(image.src);
+    };
+}
 
-    <div class="content-block">
-        <img src="1.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Bluetooth muss auf dem Handy eingeschaltet sein.</p>
-    </div>
+// Funktion zum Herunterladen des Bildes (verwendet Fetch für Zuverlässigkeit)
+function downloadImage(url) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = url.split('/').pop() || 'bild.jpg'; // Fallback-Dateiname
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(error => {
+            console.error('Fehler beim Herunterladen:', error);
+            alert('Fehler beim Herunterladen des Bildes. Stelle sicher, dass die Seite über einen Server läuft (nicht file://) und es keine CORS-Probleme gibt.');
+        });
+}
 
-    <div class="content-block">
-        <img src="2.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Auf dem Laptop/PC geht man in die Einstellungen und dort auf den Reiter „Bluetooth und Geräte“.
-           Wenn man sich noch nicht mit dem Handy verbunden hat, wählen man „Gerät hinzufügen“.</p>
-    </div>
+// Funktion zum Schließen des Modals
+function closeModal() {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "none";
+}
 
-    <div class="content-block">
-        <img src="3.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Nun drückt man auf „Bluetooth“ und wählt das Gerät aus.</p>
-    </div>
+// Scroll-Animation für den Text
+const text = document.querySelector(".Para-text");
+let lastScroll = window.scrollY;
 
-    <div class="content-block">
-        <img src="4.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Wenn es ausgewählt wurde, sollte es dort unter „Weitere Geräte“ erscheinen. Dort sollte „Gekoppelt“ stehen. 
-           Falls das nicht der Fall sein sollte, wählt man auf dem Handy „Koppeln“.</p>
-    </div>
+window.addEventListener("scroll", () => {
+    const currentScroll = window.scrollY;
 
-    <div class="content-block">
-        <img src="5.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Wenn das Handy gekoppelt ist, scrollen man etwas nach unten bis zu dem Feld „Dateien über Bluetooth senden oder empfangen“ 
-           und wählt dieses aus.</p>
-    </div>
+    if (currentScroll < lastScroll) {
+        // Hochscrollen: Text einblenden
+        text.style.opacity = "1";
+        text.style.transform = "translateY(0px)";
+    } else {
+        // Runterscrollen: Text ausblenden
+        text.style.opacity = "0";
+        text.style.transform = "translateY(20px)";
+    }
 
-    <div class="content-block">
-        <img src="6.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Dann sollte dieses Fenster erscheinen. Dort kann man entscheiden, ob eine Datei gesendet oder empfangen werden soll.
-           Zuerst wird eine Datei versandt, also drückt man auf „Datei senden“.</p>
-    </div>
+    lastScroll = currentScroll;
+});
 
-    <div class="content-block">
-        <img src="7.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Danach öffnet sich dieses Fenster. Hier wählt man erneut das Handy aus und drücken dann auf „Weiter“.</p>
-    </div>
+// Header ein- und ausblenden beim Scrollen
+let lastScrollTop = 0; // Speichert den letzten Scrollwert
+const header = document.querySelector('.header'); // Header auswählen
 
-    <div class="content-block">
-        <img src="8.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Nun erscheint dieses Feld. Dort kann man auf „Durchsuchen“ drücken und ein beliebiges Bild auswählen,
-           das übertragen werden soll.</p>
-    </div>
+window.addEventListener('scroll', function() {
+    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
-    <div class="content-block">
-        <img src="9.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>So sollte es bei der Auswahl aussehen. Wenn ein Bild gefunden wurde, klickt man darauf und wählt „Weiter“.</p>
-    </div>
+    if (currentScroll > lastScrollTop) {
+        // Wenn nach unten gescrollt wird, Header nach oben verschieben
+        header.style.top = "-60px"; // Ändere dies je nach Header-Höhe
+    } else {
+        // Wenn nach oben gescrollt wird, Header anzeigen
+        header.style.top = "0";
+    }
 
-    <div class="content-block">
-        <img src="10.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Nun sollte man die Datei im oberen Feld sehen und es kann auf „Weiter“ gedrückt werden.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="11.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Auf dem Handy bekommt man eine Benachrichtigung, dass eine Datei eingeht. Bitte mit „Akzeptieren“ bestätigen.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="12.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Nach einiger Zeit erhält man eine Benachrichtigung als Bestätigung der Übertragung.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="13.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>So sollte es bei einem erfolgreichen Abschluss der Übertragung auf dem Laptop/PC aussehen. 
-           Dort kann man jetzt einfach auf „Fertigstellen“ drücken.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="14.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>*Das Bild in der Galerie auf dem Handy*</p>
-    </div>
-
-    <div class="content-block">
-        <img src="15.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Um Bilder an einen Laptop oder PC zu senden, drückt man in der Galerie auf das „Teilen“-Symbol
-           und wählt „Bluetooth“ aus.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="16.jpg" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Daraufhin sollte der PC angezeigt werden. Diesen wählt man aus. 
-           Wenn er nicht angezeigt wird, geht man in die Einstellungen unter „Bluetooth“, 
-           und wählt dort den Laptop/PC aus.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="17.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Jetzt geht man zurück zum PC und drückt wieder unter Bluetooth auf 
-           „Dateien über Bluetooth senden oder empfangen“. Dort wählt man dieses mal „Dateien empfangen“.</p>
-    </div>
-
-    <div class="content-block">
-        <img src="18.png" alt="Platzhalterbild" onclick="openModal(this)">
-        <p>Wenn man nun zurück zum Handy geht und das Bild mit dem Laptop geteilt hat, sollten die ausgewählten Dateien erscheinen. 
-           Drücken Sie hier einfach auf „Fertigstellen“.</p>
-    </div>
-</div>
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Verhindern, dass der Wert negativ wird
+});
 
 
+// Das Panel und der Toggle-Button
+const toggleButton = document.querySelector('.toggle-btn');
+const sidePanel = document.querySelector('.side-panel');
+const closeButton = document.querySelector('.close-btn');
 
-       
- <div id="myModal" class="modal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img id="modalImage" class="modal-content" />
-</div>
+// Button für das Öffnen/Schließen des Panels
+toggleButton.addEventListener('click', function() {
+    sidePanel.classList.toggle('open');
+});
 
+// Button zum Schließen des Panels
+closeButton.addEventListener('click', function() {
+    sidePanel.classList.remove('open');
+});
 
-    
-    
+// Funktion zum Herunterladen der Datei
+function downloadFile(url, filename) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(error => {
+            console.error('Fehler beim Herunterladen:', error);
+            alert('Fehler beim Herunterladen der Datei. Stelle sicher, dass die Seite über einen Server läuft (nicht file://).');
+        });
+}
 
-    <footer>
-        <p>© 2025 IT-Präsi</p>
-    </footer>
-</body>
-</html>
+// Handhabung des Handout-Downloads (füge das am Ende deines JS-Codes hinzu)
+const downloadLink = document.getElementById('menuDownload');
+downloadLink.addEventListener('click', function(event) {
+    event.preventDefault();
+    const fileUrl = 'Handout-IT-Tapio.png';
+    const filename = 'Handout-IT-Tapio.png';
+    fetch(fileUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(error => {
+            console.error('Fehler beim Herunterladen:', error);
+            alert('Fehler beim Herunterladen. Starte einen lokalen Server!');
+        });
+})
