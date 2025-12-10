@@ -103,14 +103,6 @@ closeButton.addEventListener('click', function() {
     sidePanel.classList.remove('open');
 });
 
-// Handhabung des Handout-Downloads
-const downloadLink = document.getElementById('menuDownload');
-downloadLink.addEventListener('click', function(event) {
-    event.preventDefault(); // Verhindert das Standard-Verhalten des Links
-    const fileUrl = 'Handout-IT-Tapio.png'; // Pfad zur Datei
-    downloadFile(fileUrl, 'Handout-IT-Tapio.png');
-});
-
 // Funktion zum Herunterladen der Datei
 function downloadFile(url, filename) {
     fetch(url)
