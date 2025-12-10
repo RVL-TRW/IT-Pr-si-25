@@ -2,23 +2,45 @@
 function openModal(image) {
     const modal = document.getElementById("myModal");
     const modalImg = document.getElementById("modalImage");
-    const downloadLink = document.getElementById("downloadLink");
+    const downloadButton = document.getElementById("downloadButton");
     const closeButton = document.querySelector(".close");
 
     // Modal anzeigen
     modal.style.display = "block";
     modalImg.src = image.src;
 
-    // Setze den Download-Link
-    const imageUrl = image.src;
-    downloadLink.href = imageUrl; 
-    downloadLink.download = imageUrl.split('/').pop();
-
-    // Sicherstellen, dass der Download-Link immer angezeigt wird
-    downloadLink.style.display = 'block';
-
-    // Close-Button sichtbar machen
+    // Sicherstellen, dass der Close-Button sichtbar ist
     closeButton.style.display = 'block';
+
+    // Download-Button Event-Listener setzen (nur einmalig, aber hier für jedes Modal-Öffnen resetten)
+    downloadButton.onclick = function() {
+        downloadImage(image.src);
+    };
+}
+
+// Funktion zum Herunterladen des Bildes (verwendet Fetch für Zuverlässigkeit)
+function downloadImage(url) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = url.split('/').pop() || 'bild.jpg'; // Fallback-Dateiname
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(error => {
+            console.error('Fehler beim Herunterladen:', error);
+            alert('Fehler beim Herunterladen des Bildes. Stelle sicher, dass die Seite über einen Server läuft (nicht file://) und es keine CORS-Probleme gibt.');
+        });
 }
 
 // Funktion zum Schließen des Modals
