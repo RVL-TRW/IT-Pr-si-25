@@ -102,3 +102,36 @@ toggleButton.addEventListener('click', function() {
 closeButton.addEventListener('click', function() {
     sidePanel.classList.remove('open');
 });
+
+// Handhabung des Handout-Downloads
+const downloadLink = document.getElementById('menuDownload');
+downloadLink.addEventListener('click', function(event) {
+    event.preventDefault(); // Verhindert das Standard-Verhalten des Links
+    const fileUrl = 'Handout-IT-Tapio.png'; // Pfad zur Datei
+    downloadFile(fileUrl, 'Handout-IT-Tapio.png');
+});
+
+// Funktion zum Herunterladen der Datei
+function downloadFile(url, filename) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netzwerkantwort war nicht ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        })
+        .catch(error => {
+            console.error('Fehler beim Herunterladen:', error);
+            alert('Fehler beim Herunterladen der Datei. Stelle sicher, dass die Seite über einen Server läuft (nicht file://).');
+        });
+}
